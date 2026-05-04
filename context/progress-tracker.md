@@ -5,11 +5,11 @@ change.
 
 ## Current Phase
 
--  Not started / In progress / Complete
+-  In progress
 
 ## Current Goal
 
-- [What you are building right now]
+- Add design system and UI primitives (shadcn/ui components + lucide-react)
 
 ## Completed
 
@@ -17,15 +17,17 @@ change.
 
 ## In Progress
 
-- None yet.
+- Install and configure shadcn/ui (create UI primitives)
+- Add `lib/utils.ts` with `cn()` helper
+- Create `components/ui/*` primitives (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea)
 
 ## Next Up
 
-- [First unit to build]
+- Run `npm install` and verify components import without errors
 
 ## Open Questions
 
-- [Any unresolved product or technical decisions]
+- Should I add additional helpers like `tailwind-merge` or keep a simple `cn()`?
 
 ## Architecture Decisions
 
