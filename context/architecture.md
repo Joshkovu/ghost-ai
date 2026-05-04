@@ -25,24 +25,49 @@
 
 ## Storage Model
 
-- **[Storage type e.g. Database]**: [What lives here —
-  e.g. metadata, ownership, relationships]
-- **[Storage type e.g. Blob/File Storage]**: [What lives
-  here — e.g. generated files, media, large artifacts]
+- **Database**:metadata, ownership, relationships and task run records.
+- **Vercel Blob**:  generated artifacts - canvas snapshots at `canvas/{projectId}.json`and specs at `specs/{projectId}/{specId}.md` 
+- **Project records**, spec records and task run records belong in PostgreSQL.
+- Canvas content and Markdown output are stored in and retrieved fromVercel Bolb.
+- The blob url is stored in the database (`canvasJsonPath`,`filePath`) as the reference to the artifact.
 
 ## Auth and Access Model
 
-- [How authentication works — e.g. Every user signs in
-  via Clerk]
-- [How ownership works — e.g. Every project has a single
-  owner]
-- [How access control works — e.g. Only the owner or a
-  collaborator can mutate project resources]
+- Every user signs in
+  via Clerk
+-  Every project has a single
+  owner(Clerk user ID)
+-  Only the owner or a
+  collaborator can mutate project resources
+- Projects can include additional collaborators.
+- Only authenticated users can access protected routes.
+- Liveblocks room tokens are issued only after verifying project ownership.
+
+## Starter System Designs
+
+- Prebuilt templates are static canvas snapshots stored in the codebase.
+- Templates are loaded into the active liveblocks room when a user imports one.
+- Import can occur on canvas creation or from within the ditor at any time.
+- Template data follows the same node/edge schema as user-created canvas.
+- Templates do not require a separate database record; they are resolved by 
+
+## AI Generation Model 
+
+## Design Generation
+- Input: user prompt, project context and current canvas state.
+- Execution: durable background task via Trigger.dev
+Output: structured node and edge updates written into the shared Liveblocks room. 
+
+## Spec Generation 
+- Input: current canvas graph and project context.
+- Execution: durable background task via Trigger.dev
+- Output: Markdown technical spec saved to the filesystem and linked to the project in the database.
 
 ## Invariants
 
-1. [Rule the codebase must never violate — e.g. Request
-   handlers do not run long-lived background work]
-2. [Invariant two]
-3. [Invariant three]
-4. [Invariant four]
+1.  Request
+   handlers do not run long-lived AI work  work- that belongs in background tasks.
+2. Metadata and large generated artifacts are stored in separate layers.
+3. Auth and ownership are enforced at every mutation boundary.
+4. Client components are used only where browser interactivity or real-time state requires them.
+5. The canvas schema must remain consistent between user-created content and imported templates.

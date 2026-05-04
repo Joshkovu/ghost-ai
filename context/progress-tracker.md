@@ -5,7 +5,7 @@ change.
 
 ## Current Phase
 
-- [e.g. Not started / In progress / Complete]
+-  Not started / In progress / Complete
 
 ## Current Goal
 
