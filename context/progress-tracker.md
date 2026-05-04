@@ -14,6 +14,7 @@ change.
 ## Completed
 
 - None yet.
+- Configured the global dark color system in `app/globals.css`.
 
 ## In Progress
 
