@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Build the main editor canvas and workspace interactions.
+- Implement project data models, Prisma client singleton, and initial migration.
 
 ## Completed
 
@@ -24,7 +24,7 @@ change.
 
 ## In Progress
 
-- None.
+- Prisma Setup & Project Models (as specified in 05-prisma.md)
 
 ## Next Up
 
