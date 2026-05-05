@@ -4,12 +4,14 @@ import { cn } from "../../lib/utils";
 
 interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
   open?: boolean;
+  onClose?: () => void;
 }
 
 const Dialog = ({
   children,
   className,
   open = true,
+  onClose,
   ...props
 }: DialogProps) => {
   if (!open) {
@@ -24,11 +26,15 @@ const Dialog = ({
       )}
       {...props}
     >
-      <div className="absolute inset-0 bg-base/80 backdrop-blur-sm" />
+      <div
+        className="absolute inset-0 bg-base/80 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div className="relative z-10 w-full max-w-lg">{children}</div>
     </div>
   );
 };
+
 
 type DialogContentProps = React.HTMLAttributes<HTMLDivElement>;
 
