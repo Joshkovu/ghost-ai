@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Auth wiring now protects the app and routes unauthenticated users to sign in
+- Implement project data models, Prisma client singleton, and initial migration.
 
 ## Completed
 
@@ -20,10 +20,11 @@ change.
 - Wired the editor shell into `app/page.tsx`.
 - Added Clerk auth provider, protected editor routing, and public sign-in/sign-up pages.
 - Added `proxy.ts` route protection and `/` auth-based redirects.
+- Implemented project dialogs (Create, Rename, Delete) and sidebar actions with mock data.
 
 ## In Progress
 
-- None.
+- Prisma Setup & Project Models (as specified in 05-prisma.md)
 
 ## Next Up
 
