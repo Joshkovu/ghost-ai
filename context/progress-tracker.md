@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Editor chrome now lives in the root layout
+- Auth wiring now protects the app and routes unauthenticated users to sign in
 
 ## Completed
 
@@ -18,6 +18,8 @@ change.
 - Upgraded `components/ui/tabs.tsx` to support shadcn-style tabs.
 - Added tokenized dialog slots in `components/ui/dialog.tsx`.
 - Wired the editor shell into `app/page.tsx`.
+- Added Clerk auth provider, protected editor routing, and public sign-in/sign-up pages.
+- Added `proxy.ts` route protection and `/` auth-based redirects.
 
 ## In Progress
 
@@ -38,4 +40,4 @@ change.
 
 ## Session Notes
 
-- `npm run build` passes after the editor chrome and dialog updates.
+- `npm run build` passes after the auth wiring, route split, and Clerk theme fixes.

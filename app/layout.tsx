@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { EditorShell } from "@/components/editor/editor-shell";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/ui/themes";
 
 import "./globals.css";
 
@@ -31,7 +32,26 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <EditorShell>{children}</EditorShell>
+        <ClerkProvider
+          dynamic
+          appearance={{
+            theme: dark,
+            variables: {
+              colorPrimary: "var(--accent-primary)",
+              colorPrimaryForeground: "var(--text-primary)",
+              colorBackground: "var(--bg-surface)",
+              colorForeground: "var(--text-primary)",
+              colorMutedForeground: "var(--text-secondary)",
+              colorInput: "var(--bg-elevated)",
+              colorInputForeground: "var(--text-primary)",
+              colorNeutral: "var(--border-default)",
+              colorBorder: "var(--border-default)",
+              borderRadius: "1rem",
+            },
+          }}
+        >
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );
