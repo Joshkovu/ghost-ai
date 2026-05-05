@@ -7,13 +7,8 @@ import { clerkAuthAppearance } from "../../../lib/clerk-auth-appearance";
 export default function SignInPage() {
   return (
     <AuthShell
-      title="Sign in to Ghost AI"
-      description="Return to your editor workspace, continue collaborating, and manage your projects in one place."
-      bullets={[
-        "Open your active editor workspace",
-        "Manage projects and collaborators",
-        "Keep your architecture work in sync",
-      ]}
+      title="Design systems at the speed of thought."
+      description="Describe your architecture in plain English. Ghost AI maps it to a shared canvas your whole team can refine in real time."
     >
       <SignIn
         routing="path"

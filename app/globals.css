@@ -70,3 +70,12 @@ body {
 	background: var(--accent-primary-dim);
 	color: var(--text-primary);
 }
+
+.clerk-user-button-white [data-clerk-component="UserButton"] :is(button, a, span, p) {
+	color: var(--text-primary) !important;
+}
+
+.clerk-user-button-white [data-clerk-component="UserButton"] svg {
+	color: var(--text-primary) !important;
+	fill: currentColor;
+}

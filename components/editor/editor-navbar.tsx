@@ -43,7 +43,7 @@ export function EditorNavbar({
 
       <div className="flex flex-1 items-center justify-center" />
 
-      <div className="flex w-56 items-center justify-end">
+      <div className="clerk-user-button-white flex w-56 items-center justify-end">
         <UserButton />
       </div>
     </header>
