@@ -1,5 +1,4 @@
-## Goal
-
+## Goal### Delete Project Dialog
 Build the `/editor` home screen and add project dialogs/sidebar actions. No API calls or persistence yet.
 
 ## Editor Home
@@ -8,11 +7,9 @@ Reuse the existing editor layout. Do not modify the navbar or sidebar behaviour.
 
 In the center of the page add:
 - heading:`Create a project or open an existing one`
-- descriotion: `Start a new architecture workspace or choose a project from the sidebar.`
-- `New Project` button with a `Plus` icon
-
-Keep the layout mimal. Do not wrap this content in cards.
-
+- description: `Start a new architecture workspace or choose a project from the sidebar.`
+- description: `Start a new architecture workspace or choose a project from the sidebar.`
+Keep the layout minimal. Do not wrap this content in cards.
 Clicking `New Project` should open the Create Project dialog.
 
 ## Dialogs
