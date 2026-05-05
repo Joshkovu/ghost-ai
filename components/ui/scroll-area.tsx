@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 
-interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ScrollAreaProps = React.HTMLAttributes<HTMLDivElement>;
 
 const ScrollArea: React.FC<ScrollAreaProps> = ({ children, className, ...props }) => {
   return (

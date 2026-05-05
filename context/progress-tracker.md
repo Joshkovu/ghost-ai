@@ -5,30 +5,31 @@ change.
 
 ## Current Phase
 
--  In progress
+-  Complete
 
 ## Current Goal
 
-- Add design system and UI primitives (shadcn/ui components + lucide-react)
+- Editor chrome now lives in the root layout
 
 ## Completed
 
-- None yet.
 - Configured the global dark color system in `app/globals.css`.
+- Added `EditorNavbar` and `ProjectSidebar` in `components/editor/`.
+- Upgraded `components/ui/tabs.tsx` to support shadcn-style tabs.
+- Added tokenized dialog slots in `components/ui/dialog.tsx`.
+- Wired the editor shell into `app/page.tsx`.
 
 ## In Progress
 
-- Install and configure shadcn/ui (create UI primitives)
-- Add `lib/utils.ts` with `cn()` helper
-- Create `components/ui/*` primitives (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea)
+- None.
 
 ## Next Up
 
-- Run `npm install` and verify components import without errors
+- Build the main editor canvas and workspace interactions.
 
 ## Open Questions
 
-- Should I add additional helpers like `tailwind-merge` or keep a simple `cn()`?
+- None.
 
 ## Architecture Decisions
 
@@ -37,4 +38,4 @@ change.
 
 ## Session Notes
 
-- [Context needed to resume work in the next session]
+- `npm run build` passes after the editor chrome and dialog updates.
