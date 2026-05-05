@@ -75,7 +75,44 @@ body {
 	color: var(--text-primary) !important;
 }
 
+.clerk-user-button-white [data-clerk-component="UserButton"] [role="menuitem"] {
+	color: var(--text-primary) !important;
+	opacity: 1 !important;
+}
+
+.clerk-user-button-white [data-clerk-component="UserButton"] [role="menuitem"] :is(span, p) {
+	color: var(--text-primary) !important;
+	opacity: 1 !important;
+}
+
 .clerk-user-button-white [data-clerk-component="UserButton"] svg {
 	color: var(--text-primary) !important;
 	fill: currentColor;
+	opacity: 1 !important;
+}
+
+.cl-userButtonPopoverActionButton,
+.cl-userButtonPopoverActionButtonText,
+.cl-userButtonPopoverActionButtonIcon,
+.cl-userButtonPopoverActionButton span,
+.cl-userButtonPopoverActionButton p {
+	color: #ffffff !important;
+	opacity: 1 !important;
+}
+
+.cl-userButtonPopoverActionButtonIcon svg {
+	color: #ffffff !important;
+	fill: currentColor !important;
+	opacity: 1 !important;
+}
+
+.cl-modalBackdrop {
+	background: rgba(5, 7, 12, 0.78) !important;
+	backdrop-filter: blur(8px) saturate(115%);
+}
+
+.cl-modalContent {
+	background: color-mix(in srgb, var(--bg-surface) 92%, #06070d 8%) !important;
+	border: 1px solid var(--border-default) !important;
+	box-shadow: 0 30px 100px rgba(0, 0, 0, 0.6) !important;
 }
