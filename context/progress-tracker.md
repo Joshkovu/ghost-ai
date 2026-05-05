@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Implement project data models, Prisma client singleton, and initial migration.
+- Build the main editor canvas and workspace interactions.
 
 ## Completed
 
@@ -21,14 +21,16 @@ change.
 - Added Clerk auth provider, protected editor routing, and public sign-in/sign-up pages.
 - Added `proxy.ts` route protection and `/` auth-based redirects.
 - Implemented project dialogs (Create, Rename, Delete) and sidebar actions with mock data.
+- Prisma Setup & Project Models (as specified in 05-prisma.md)
+- Project API Routes (as specified in 06-project-apis.md)
 
 ## In Progress
 
-- Prisma Setup & Project Models (as specified in 05-prisma.md)
+- Build the main editor canvas and workspace interactions.
 
 ## Next Up
 
-- Build the main editor canvas and workspace interactions.
+- Connect editor canvas to real API endpoints.
 
 ## Open Questions
 
