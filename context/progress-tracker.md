@@ -25,6 +25,8 @@ change.
 - Project API Routes (as specified in 06-project-apis.md)
 - Wired the editor home sidebar, dialogs, and create flow to the real project APIs.
 - Built `/editor/[roomId]` with server-side access checks, access denial state, and workspace shell placeholders.
+- Implemented workspace Share dialog with collaborator list, owner invite/remove controls, and copy-link feedback.
+- Added `/api/projects/[id]/collaborators` API with owner-enforced invite/remove and Clerk-based collaborator enrichment.
 
 ## In Progress
 
@@ -48,3 +50,5 @@ change.
 - `npm run build` passes after the auth wiring, route split, and Clerk theme fixes.
 - `pnpm run build` passes after wiring the editor home to server-fetched project data and real create/rename/delete mutations.
 - `pnpm run build` passes after adding `/editor/[roomId]`, access helpers, and workspace shell placeholders.
+- `pnpm run build` passes after refining the workspace alignment and replacing the AI sidebar icon with a bright `AI chat` button.
+- `pnpm run build` passes after adding share dialog flows and collaborator APIs with resilient Clerk enrichment fallback.

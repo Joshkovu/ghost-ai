@@ -40,6 +40,7 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
     <EditorWorkspaceShell
       projectId={project.id}
       projectName={project.name}
+      isOwner={project.ownerId === identity.userId}
       ownedProjects={groups.ownedProjects}
       sharedProjects={groups.sharedProjects}
     />

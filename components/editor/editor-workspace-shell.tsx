@@ -5,6 +5,7 @@ import { useState } from "react";
 import { EditorNavbar } from "@/components/editor/editor-navbar";
 import { ProjectDialogs } from "@/components/editor/project-dialogs";
 import { ProjectSidebar } from "@/components/editor/project-sidebar";
+import { ShareProjectDialog } from "@/components/editor/share-project-dialog";
 import { useProjectDialogs } from "@/lib/hooks/use-project-dialogs";
 import type { ProjectListItem } from "@/lib/project-types";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 interface EditorWorkspaceShellProps {
   projectId: string;
   projectName: string;
+  isOwner: boolean;
   ownedProjects: ProjectListItem[];
   sharedProjects: ProjectListItem[];
 }
@@ -19,11 +21,13 @@ interface EditorWorkspaceShellProps {
 export function EditorWorkspaceShell({
   projectId,
   projectName,
+  isOwner,
   ownedProjects,
   sharedProjects,
 }: EditorWorkspaceShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(true);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const {
     activeDialog,
     selectedProject,
@@ -45,6 +49,7 @@ export function EditorWorkspaceShell({
         isSidebarOpen={isSidebarOpen}
         onToggleSidebar={() => setIsSidebarOpen((currentValue) => !currentValue)}
         projectName={projectName}
+        onOpenShareDialog={() => setIsShareDialogOpen(true)}
         onToggleAiSidebar={() => setIsAiSidebarOpen((currentValue) => !currentValue)}
       />
 
@@ -124,6 +129,13 @@ export function EditorWorkspaceShell({
         onSubmit={submitActiveDialog}
         onCreateProjectNameChange={setCreateProjectName}
         onRenameProjectNameChange={setRenameProjectName}
+      />
+
+      <ShareProjectDialog
+        open={isShareDialogOpen}
+        projectId={projectId}
+        isOwner={isOwner}
+        onClose={() => setIsShareDialogOpen(false)}
       />
     </div>
   );

@@ -10,6 +10,7 @@ interface EditorNavbarProps extends React.HTMLAttributes<HTMLElement> {
   isSidebarOpen: boolean;
   onToggleSidebar: () => void;
   projectName?: string;
+  onOpenShareDialog?: () => void;
   onToggleAiSidebar?: () => void;
 }
 
@@ -17,6 +18,7 @@ export function EditorNavbar({
   isSidebarOpen,
   onToggleSidebar,
   projectName,
+  onOpenShareDialog,
   onToggleAiSidebar,
   className,
   ...props
@@ -63,7 +65,7 @@ export function EditorNavbar({
           <>
             <button
               type="button"
-              onClick={() => undefined}
+              onClick={onOpenShareDialog}
               className="inline-flex h-10 items-center gap-2 rounded-xl border border-surface-border bg-subtle px-3 text-xs font-medium text-copy-secondary transition-colors hover:text-copy-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
             >
               <Share2 className="h-3.5 w-3.5" />

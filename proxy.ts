@@ -8,8 +8,8 @@ const publicRoutes = createRouteMatcher([
   `${clerkSignUpPath}(.*)`,
 ]);
 
-export default clerkMiddleware((auth, request) => {
+export default clerkMiddleware(async (auth, request) => {
   if (!publicRoutes(request)) {
-    auth.protect();
+    await auth.protect();
   }
 });
