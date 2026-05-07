@@ -8,26 +8,46 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogType, Project } from "@/lib/hooks/use-project-dialogs";
 import Button from "@/components/ui/button";
 import type { ProjectListItem } from "@/lib/project-types";
+import { useRouter } from "next/navigation";
 
 interface ProjectSidebarProps extends React.HTMLAttributes<HTMLElement> {
   isOpen: boolean;
   onClose?: () => void;
   myProjects: ProjectListItem[];
   sharedProjects: ProjectListItem[];
+  activeProjectId?: string | null;
+  variant?: "overlay" | "docked";
   onOpenDialog: (type: DialogType, project?: Project | null) => void;
 }
 
 function ProjectItem({ 
   project, 
+  isActive,
   onRename, 
   onDelete 
 }: { 
   project: Project;
+  isActive?: boolean;
   onRename: () => void;
   onDelete: () => void;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="group relative flex items-center justify-between rounded-xl border border-transparent px-3 py-2.5 transition-all hover:border-surface-border hover:bg-subtle/50 hover:shadow-sm">
+    <div className={cn(
+      "group relative flex cursor-pointer items-center justify-between rounded-xl border px-3 py-2.5 transition-all hover:border-surface-border hover:bg-subtle/50 hover:shadow-sm",
+      isActive ? "border-brand/40 bg-brand/10 shadow-[0_0_0_1px_rgba(124,58,237,0.2)]" : "border-transparent"
+    )}
+      onClick={() => router.push(`/editor/${project.id}`)}
+      role="link"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          router.push(`/editor/${project.id}`);
+        }
+      }}
+    >
       <div className="flex items-center gap-3 overflow-hidden">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface border border-surface-border group-hover:border-brand/30 transition-colors">
           <Folder className="h-4 w-4 text-copy-secondary group-hover:text-brand transition-colors" />
@@ -83,16 +103,24 @@ export function ProjectSidebar({
   onClose,
   myProjects,
   sharedProjects,
+  activeProjectId,
+  variant = "overlay",
   onOpenDialog,
   className,
   ...props
 }: ProjectSidebarProps) {
+  const router = useRouter();
+
+  const isDocked = variant === "docked";
+
   return (
     <aside
       aria-hidden={!isOpen}
       className={cn(
-        "fixed inset-y-0 left-0 z-40 flex w-[20rem] max-w-[calc(100vw-1rem)] transform-gpu flex-col border-r border-surface-border bg-surface/95 shadow-[16px_0_60px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-transform duration-300 ease-out",
-        isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none",
+        isDocked
+          ? "relative flex h-full w-[20rem] max-w-[20rem] flex-col border-r border-surface-border bg-surface/95"
+          : "fixed top-14 bottom-0 left-0 z-40 flex w-[20rem] max-w-[calc(100vw-1rem)] transform-gpu flex-col border-r border-surface-border bg-surface/95 shadow-[16px_0_60px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-transform duration-300 ease-out",
+        !isDocked && (isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"),
         className,
       )}
       {...props}
@@ -126,6 +154,7 @@ export function ProjectSidebar({
                   <ProjectItem 
                     key={project.id} 
                     project={project} 
+                    isActive={activeProjectId === project.id}
                     onRename={() => onOpenDialog("rename", project)}
                     onDelete={() => onOpenDialog("delete", project)}
                   />
@@ -143,6 +172,7 @@ export function ProjectSidebar({
                   <ProjectItem 
                     key={project.id} 
                     project={project}
+                    isActive={activeProjectId === project.id}
                     onRename={() => onOpenDialog("rename", project)}
                     onDelete={() => onOpenDialog("delete", project)}
                   />

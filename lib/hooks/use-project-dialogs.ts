@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createRoomId, createRoomSuffix } from "@/lib/project-room";
 
 export type DialogType = "create" | "rename" | "delete" | null;
@@ -14,7 +14,7 @@ export interface Project {
 
 export function useProjectDialogs() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [activeDialog, setActiveDialog] = useState<DialogType>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [createProjectName, setCreateProjectName] = useState("");
@@ -26,6 +26,14 @@ export function useProjectDialogs() {
     () => createRoomId(createProjectName.trim() || "Untitled Project", createRoomIdSeed),
     [createProjectName, createRoomIdSeed],
   );
+
+  const currentRoomId = useMemo(() => {
+    if (!pathname.startsWith("/editor/")) {
+      return null;
+    }
+
+    return pathname.split("/")[2] ?? null;
+  }, [pathname]);
 
   const openDialog = useCallback((type: DialogType, project: Project | null = null) => {
     setSelectedProject(project);
@@ -89,7 +97,7 @@ export function useProjectDialogs() {
       const createdProject = await response.json();
 
       closeDialog();
-      router.replace(`/editor?projectId=${createdProject.id}&roomId=${createdProject.roomId ?? createRoomIdPreview}`);
+      router.replace(`/editor/${createdProject.id}`);
       router.refresh();
       return;
     }
@@ -131,17 +139,15 @@ export function useProjectDialogs() {
         throw new Error("Failed to delete project");
       }
 
-      const activeProjectId = searchParams.get("projectId");
-
       closeDialog();
 
-      if (activeProjectId === selectedProject.id) {
+      if (currentRoomId === selectedProject.id) {
         router.replace("/editor");
       }
 
       router.refresh();
     }
-  }, [activeDialog, closeDialog, createProjectName, createRoomIdPreview, renameProjectName, router, searchParams, selectedProject]);
+  }, [activeDialog, closeDialog, createProjectName, createRoomIdPreview, currentRoomId, renameProjectName, router, selectedProject]);
 
   return {
     activeDialog,

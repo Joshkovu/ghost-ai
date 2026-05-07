@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Connect editor canvas to real API endpoints.
+- Build the editor workspace shell with server-side access checks.
 
 ## Completed
 
@@ -24,6 +24,7 @@ change.
 - Prisma Setup & Project Models (as specified in 05-prisma.md)
 - Project API Routes (as specified in 06-project-apis.md)
 - Wired the editor home sidebar, dialogs, and create flow to the real project APIs.
+- Built `/editor/[roomId]` with server-side access checks, access denial state, and workspace shell placeholders.
 
 ## In Progress
 
@@ -31,7 +32,7 @@ change.
 
 ## Next Up
 
-- Connect editor canvas to real API endpoints.
+- Connect the editor canvas and workspace interactions to real runtime data.
 
 ## Open Questions
 
@@ -46,3 +47,4 @@ change.
 
 - `npm run build` passes after the auth wiring, route split, and Clerk theme fixes.
 - `pnpm run build` passes after wiring the editor home to server-fetched project data and real create/rename/delete mutations.
+- `pnpm run build` passes after adding `/editor/[roomId]`, access helpers, and workspace shell placeholders.
