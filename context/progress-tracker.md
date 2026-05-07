@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Build the main editor canvas and workspace interactions.
+- Connect editor canvas to real API endpoints.
 
 ## Completed
 
@@ -23,10 +23,11 @@ change.
 - Implemented project dialogs (Create, Rename, Delete) and sidebar actions with mock data.
 - Prisma Setup & Project Models (as specified in 05-prisma.md)
 - Project API Routes (as specified in 06-project-apis.md)
+- Wired the editor home sidebar, dialogs, and create flow to the real project APIs.
 
 ## In Progress
 
-- Build the main editor canvas and workspace interactions.
+- None.
 
 ## Next Up
 
@@ -44,3 +45,4 @@ change.
 ## Session Notes
 
 - `npm run build` passes after the auth wiring, route split, and Clerk theme fixes.
+- `pnpm run build` passes after wiring the editor home to server-fetched project data and real create/rename/delete mutations.

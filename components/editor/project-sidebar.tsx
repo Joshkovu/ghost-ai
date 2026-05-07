@@ -3,24 +3,19 @@
 import React from "react";
 import { Plus, X, Edit2, Trash2, Folder } from "lucide-react";
 
-
-
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogType, Project } from "@/lib/hooks/use-project-dialogs";
 import Button from "@/components/ui/button";
+import type { ProjectListItem } from "@/lib/project-types";
 
 interface ProjectSidebarProps extends React.HTMLAttributes<HTMLElement> {
   isOpen: boolean;
   onClose?: () => void;
+  myProjects: ProjectListItem[];
+  sharedProjects: ProjectListItem[];
   onOpenDialog: (type: DialogType, project?: Project | null) => void;
 }
-
-const MOCK_PROJECTS: Project[] = [
-  { id: "1", name: "Ghost AI Infrastructure", slug: "ghost-infra", isOwner: true },
-  { id: "2", name: "Client Portal Design", slug: "client-portal", isOwner: true },
-  { id: "3", name: "API Documentation", slug: "api-docs", isOwner: false },
-];
 
 function ProjectItem({ 
   project, 
@@ -40,9 +35,6 @@ function ProjectItem({
         <div className="flex flex-col overflow-hidden">
           <span className="truncate text-sm font-medium text-copy-primary">
             {project.name}
-          </span>
-          <span className="truncate text-[11px] text-copy-faint group-hover:text-copy-muted transition-colors">
-            {project.slug}
           </span>
         </div>
       </div>
@@ -89,13 +81,12 @@ function EmptyProjectsState({ title }: { title: string }) {
 export function ProjectSidebar({
   isOpen,
   onClose,
+  myProjects,
+  sharedProjects,
   onOpenDialog,
   className,
   ...props
 }: ProjectSidebarProps) {
-  const myProjects = MOCK_PROJECTS.filter(p => p.isOwner);
-  const sharedProjects = MOCK_PROJECTS.filter(p => !p.isOwner);
-
   return (
     <aside
       aria-hidden={!isOpen}

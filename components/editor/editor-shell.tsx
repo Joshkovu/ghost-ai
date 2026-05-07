@@ -8,15 +8,31 @@ import { ProjectDialogs } from "@/components/editor/project-dialogs";
 import { useProjectDialogs } from "@/lib/hooks/use-project-dialogs";
 import { ProjectActionsProvider } from "@/lib/context/project-actions-context";
 import { cn } from "@/lib/utils";
+import type { ProjectListItem } from "@/lib/project-types";
 
 
 interface EditorShellProps {
   children: ReactNode;
+  ownedProjects: ProjectListItem[];
+  sharedProjects: ProjectListItem[];
 }
 
-export function EditorShell({ children }: EditorShellProps) {
+export function EditorShell({ children, ownedProjects, sharedProjects }: EditorShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { activeDialog, selectedProject, isLoading, openDialog, closeDialog, handleAction } = useProjectDialogs();
+  const {
+    activeDialog,
+    selectedProject,
+    isLoading,
+    createProjectName,
+    renameProjectName,
+    createRoomIdPreview,
+    openDialog,
+    closeDialog,
+    handleAction,
+    setCreateProjectName,
+    setRenameProjectName,
+    submitActiveDialog,
+  } = useProjectDialogs();
 
   return (
     <div className="min-h-screen bg-base text-copy-primary">
@@ -37,6 +53,8 @@ export function EditorShell({ children }: EditorShellProps) {
       <ProjectSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        myProjects={ownedProjects}
+        sharedProjects={sharedProjects}
         onOpenDialog={openDialog}
       />
 
@@ -45,12 +63,17 @@ export function EditorShell({ children }: EditorShellProps) {
       </ProjectActionsProvider>
 
       <ProjectDialogs
-
         activeDialog={activeDialog}
         selectedProject={selectedProject}
         isLoading={isLoading}
+        createProjectName={createProjectName}
+        renameProjectName={renameProjectName}
+        roomIdPreview={createRoomIdPreview}
         onClose={closeDialog}
         onAction={handleAction}
+        onSubmit={submitActiveDialog}
+        onCreateProjectNameChange={setCreateProjectName}
+        onRenameProjectNameChange={setRenameProjectName}
       />
     </div>
   );

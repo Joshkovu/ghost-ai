@@ -1,10 +1,11 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
-import { DialogType, Project } from "@/lib/hooks/use-project-dialogs";
+import { DialogType } from "@/lib/hooks/use-project-dialogs";
+import type { ProjectListItem } from "@/lib/project-types";
 
 interface ProjectActionsContextType {
-  openDialog: (type: DialogType, project?: Project | null) => void;
+  openDialog: (type: DialogType, project?: ProjectListItem | null) => void;
 }
 
 const ProjectActionsContext = createContext<ProjectActionsContextType | undefined>(undefined);
@@ -14,7 +15,7 @@ export function ProjectActionsProvider({
   openDialog 
 }: { 
   children: React.ReactNode;
-  openDialog: (type: DialogType, project?: Project | null) => void;
+  openDialog: (type: DialogType, project?: ProjectListItem | null) => void;
 }) {
   return (
     <ProjectActionsContext.Provider value={{ openDialog }}>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AlertCircle } from "lucide-react";
 
 import Dialog, {
@@ -18,16 +18,28 @@ interface ProjectDialogsProps {
   activeDialog: DialogType;
   selectedProject: Project | null;
   isLoading: boolean;
+  createProjectName: string;
+  renameProjectName: string;
+  roomIdPreview: string;
   onClose: () => void;
   onAction: (action: () => Promise<void>) => void;
+  onSubmit: () => Promise<void>;
+  onCreateProjectNameChange: (value: string) => void;
+  onRenameProjectNameChange: (value: string) => void;
 }
 
 export function ProjectDialogs({
   activeDialog,
   selectedProject,
   isLoading,
+  createProjectName,
+  renameProjectName,
+  roomIdPreview,
   onClose,
   onAction,
+  onSubmit,
+  onCreateProjectNameChange,
+  onRenameProjectNameChange,
 }: ProjectDialogsProps) {
   if (!activeDialog) return null;
 
@@ -39,8 +51,14 @@ export function ProjectDialogs({
           activeDialog={activeDialog}
           selectedProject={selectedProject}
           isLoading={isLoading}
+          createProjectName={createProjectName}
+          renameProjectName={renameProjectName}
+          roomIdPreview={roomIdPreview}
           onClose={onClose}
           onAction={onAction}
+          onSubmit={onSubmit}
+          onCreateProjectNameChange={onCreateProjectNameChange}
+          onRenameProjectNameChange={onRenameProjectNameChange}
         />
       </DialogContent>
     </Dialog>
@@ -51,29 +69,22 @@ function ProjectDialogContent({
   activeDialog,
   selectedProject,
   isLoading,
+  createProjectName,
+  renameProjectName,
+  roomIdPreview,
   onClose,
   onAction,
+  onSubmit,
+  onCreateProjectNameChange,
+  onRenameProjectNameChange,
 }: ProjectDialogsProps) {
-  const [projectName, setProjectName] = useState(
-    activeDialog === "rename" ? selectedProject?.name || "" : ""
-  );
-
-  const slug = (activeDialog === "create" || activeDialog === "rename")
-    ? projectName
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "")
-    : "";
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!projectName.trim() && activeDialog !== "delete") return;
+    if (activeDialog === "rename" && !renameProjectName.trim()) {
+      return;
+    }
 
-    onAction(async () => {
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(`${activeDialog} project:`, projectName || selectedProject?.name);
-    });
+    onAction(onSubmit);
   };
 
   return (
@@ -94,14 +105,13 @@ function ProjectDialogContent({
               <Input
                 id="name"
                 placeholder="E.g. Ghost AI Core"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+                value={createProjectName}
+                onChange={(e) => onCreateProjectNameChange(e.target.value)}
                 autoFocus
-                required
               />
-              {slug && (
+              {roomIdPreview && (
                 <p className="text-[11px] text-copy-faint">
-                  URL Slug: <span className="text-brand">ghost.ai/editor/{slug}</span>
+                  Room ID preview: <span className="text-brand">{roomIdPreview}</span>
                 </p>
               )}
             </div>
@@ -125,8 +135,8 @@ function ProjectDialogContent({
               <Input
                 id="rename-name"
                 placeholder="E.g. New Project Name"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
+                value={renameProjectName}
+                onChange={(e) => onRenameProjectNameChange(e.target.value)}
                 autoFocus
                 required
               />
@@ -157,7 +167,7 @@ function ProjectDialogContent({
         <Button
           type="submit"
           variant={activeDialog === "delete" ? "destructive" : "brand"}
-          disabled={isLoading || (activeDialog !== "delete" && !projectName.trim())}
+          disabled={isLoading || (activeDialog === "rename" && !renameProjectName.trim())}
         >
           {isLoading ? "Processing..." : activeDialog === "create" ? "Create Project" : activeDialog === "rename" ? "Save Changes" : "Delete Project"}
         </Button>
