@@ -19,11 +19,39 @@ import '@xyflow/react/dist/style.css';
 import { CanvasNode } from '@/components/editor/canvas-node';
 import { CanvasNodeEditProvider } from '@/components/editor/canvas-node-edit-context';
 import { ShapePanel } from '@/components/editor/shape-panel';
-import { DEFAULT_NODE_COLOR, type CanvasFlowNode, type CanvasNodeData } from '@/types/canvas';
+import {
+  DEFAULT_NODE_COLOR,
+  DEFAULT_SHAPE_SIZES,
+  type CanvasFlowNode,
+  type CanvasNodeData,
+  type NodeShape,
+} from '@/types/canvas';
 
 interface CanvasWrapperProps {
   roomId: string;
   children?: ReactNode;
+}
+
+const NODE_SHAPES = new Set<NodeShape>(['rectangle', 'circle', 'diamond', 'pill', 'cylinder', 'hexagon']);
+
+function isNodeShape(value: unknown): value is NodeShape {
+  return typeof value === 'string' && NODE_SHAPES.has(value as NodeShape);
+}
+
+type ShapeDropData = {
+  type: 'shape';
+  shape: NodeShape;
+};
+
+function isShapeDropData(value: unknown): value is ShapeDropData {
+  return (
+    typeof value === 'object'
+    && value !== null
+    && 'type' in value
+    && 'shape' in value
+    && value.type === 'shape'
+    && isNodeShape(value.shape)
+  );
 }
 
 function CanvasDropZone() {
@@ -57,12 +85,14 @@ function CanvasDropZone() {
       e.preventDefault();
 
       try {
-        const data = JSON.parse(e.dataTransfer.getData('application/json'));
+        const data: unknown = JSON.parse(e.dataTransfer.getData('application/json'));
 
-        if (data.type !== 'shape') {
+        if (!isShapeDropData(data)) {
           return;
         }
 
+        const { shape } = data;
+        const size = DEFAULT_SHAPE_SIZES[shape];
         const flowPosition = screenToFlowPosition({
           x: e.clientX,
           y: e.clientY,
@@ -71,18 +101,20 @@ function CanvasDropZone() {
         const nodeData: CanvasNodeData = {
           label: '',
           color: DEFAULT_NODE_COLOR,
-          shape: data.shape,
-          width: data.width,
-          height: data.height,
+          shape,
+          width: size.width,
+          height: size.height,
         };
 
         const newNode = {
-          id: generateNodeId(data.shape),
+          id: generateNodeId(shape),
           data: nodeData,
           position: {
-            x: flowPosition.x - data.width / 2,
-            y: flowPosition.y - data.height / 2,
+            x: flowPosition.x - size.width / 2,
+            y: flowPosition.y - size.height / 2,
           },
+          initialWidth: size.width,
+          initialHeight: size.height,
           type: 'canvas',
         };
 
@@ -120,8 +152,36 @@ function CanvasDropZone() {
     [nodes, onNodesChange]
   );
 
+  const updateNodeSize = useCallback(
+    (nodeId: string, width: number, height: number) => {
+      const currentNode = nodes.find((node) => node.id === nodeId);
+
+      if (!currentNode) {
+        return;
+      }
+
+      const changes: NodeChange<CanvasFlowNode>[] = [{
+        type: 'replace',
+        id: nodeId,
+        item: {
+          ...currentNode,
+          width,
+          height,
+          data: {
+            ...currentNode.data,
+            width,
+            height,
+          },
+        } as CanvasFlowNode,
+      } as NodeChange<CanvasFlowNode>];
+
+      onNodesChange(changes);
+    },
+    [nodes, onNodesChange]
+  );
+
   return (
-    <CanvasNodeEditProvider updateNodeLabel={updateNodeLabel}>
+    <CanvasNodeEditProvider updateNodeLabel={updateNodeLabel} updateNodeSize={updateNodeSize}>
       <div
         className="absolute inset-0 bg-base"
         onDragOver={handleDragOver}

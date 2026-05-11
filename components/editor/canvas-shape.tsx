@@ -14,6 +14,7 @@ interface CanvasShapeVisualProps extends ShapeSize {
   color?: string;
   selected?: boolean;
   label: ReactNode;
+  labelClassName?: string;
   editable?: boolean;
   onLabelChange?: (value: string) => void;
 }
@@ -48,16 +49,20 @@ function ShapeLabel({
   editable,
   onLabelChange,
   color,
+  labelClassName,
 }: {
   label: ReactNode;
   editable?: boolean;
   onLabelChange?: (value: string) => void;
   color: string;
+  labelClassName?: string;
 }) {
+  const resolvedLabelClassName = typeof labelClassName === 'string' && labelClassName ? labelClassName : 'text-white';
+
   if (!editable) {
     return (
       <div
-        className="relative z-10 px-3 text-center text-xs font-medium leading-tight text-white pointer-events-none select-none"
+        className={`relative z-10 px-3 text-center text-xs font-medium leading-tight pointer-events-none select-none ${resolvedLabelClassName}`}
       >
         {label}
       </div>
@@ -66,7 +71,7 @@ function ShapeLabel({
 
   return (
     <div
-      className="relative z-10 px-3 text-center text-xs font-medium leading-tight text-white outline-none"
+      className={`relative z-10 px-3 text-center text-xs font-medium leading-tight outline-none ${resolvedLabelClassName}`}
       contentEditable
       suppressContentEditableWarning
       spellCheck={false}
@@ -91,10 +96,8 @@ function ShapeLabel({
 function SvgNodeFrame({
   shape,
   color,
-  width,
-  height,
   selected,
-}: Pick<CanvasShapeVisualProps, 'shape' | 'color' | 'width' | 'height' | 'selected'>) {
+}: Pick<CanvasShapeVisualProps, 'shape' | 'color' | 'selected'>) {
   const resolvedColor = color ?? DEFAULT_NODE_COLOR;
   const stroke = getSvgStroke(resolvedColor, selected);
   const fill = hexToRgba(resolvedColor, 0.14);
@@ -159,6 +162,7 @@ export function CanvasShapeVisual({
   height,
   selected,
   label,
+  labelClassName,
   editable,
   onLabelChange,
 }: CanvasShapeVisualProps) {
@@ -175,8 +179,8 @@ export function CanvasShapeVisual({
           height,
         }}
       >
-        <SvgNodeFrame shape={shape} color={color} width={width} height={height} selected={selected} />
-        <ShapeLabel label={label} editable={editable} onLabelChange={onLabelChange} color={selected ? '#ffffff' : hexToRgba(color, 0.92)} />
+        <SvgNodeFrame shape={shape} color={color} selected={selected} />
+        <ShapeLabel label={label} editable={editable} onLabelChange={onLabelChange} color={selected ? '#ffffff' : hexToRgba(color, 0.92)} labelClassName={labelClassName} />
       </div>
     );
   }
@@ -191,7 +195,7 @@ export function CanvasShapeVisual({
         ...sharedStyle,
       }}
     >
-      <ShapeLabel label={label} editable={editable} onLabelChange={onLabelChange} color={selected ? '#ffffff' : hexToRgba(color, 0.92)} />
+      <ShapeLabel label={label} editable={editable} onLabelChange={onLabelChange} color={selected ? '#ffffff' : hexToRgba(color, 0.92)} labelClassName={labelClassName} />
     </div>
   );
 }

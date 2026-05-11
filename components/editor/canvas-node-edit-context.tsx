@@ -4,18 +4,20 @@ import { createContext, useContext, type ReactNode } from 'react';
 
 interface CanvasNodeEditContextValue {
   updateNodeLabel: (nodeId: string, label: string) => void;
+  updateNodeSize: (nodeId: string, width: number, height: number) => void;
 }
 
 const CanvasNodeEditContext = createContext<CanvasNodeEditContextValue | null>(null);
 
 interface CanvasNodeEditProviderProps {
   updateNodeLabel: (nodeId: string, label: string) => void;
+  updateNodeSize: (nodeId: string, width: number, height: number) => void;
   children: ReactNode;
 }
 
-export function CanvasNodeEditProvider({ updateNodeLabel, children }: CanvasNodeEditProviderProps) {
+export function CanvasNodeEditProvider({ updateNodeLabel, updateNodeSize, children }: CanvasNodeEditProviderProps) {
   return (
-    <CanvasNodeEditContext.Provider value={{ updateNodeLabel }}>
+    <CanvasNodeEditContext.Provider value={{ updateNodeLabel, updateNodeSize }}>
       {children}
     </CanvasNodeEditContext.Provider>
   );

@@ -62,6 +62,17 @@ change.
   - Kept node borders subtle at rest and brighter when selected
   - Added shape-specific drag ghost previews that match the dragged shape and size
   - Enabled inline text editing for selected node labels through Liveblocks-backed node updates
+- Refined shape rendering and persistent connections
+  - Removed the generic rectangle wrapper from SVG-based shapes so diamond, hexagon, and cylinder render as their own silhouettes
+  - Forwarded React Flow `onConnect` into Liveblocks Flow so new edges persist after creation
+  - Kept connection styling aligned with the canvas accent color
+- Implemented node resizing and inline label editing (as specified in 14-node-editing.md)
+  - Added subtle React Flow resize handles that appear only on selected nodes
+  - Enforced an 80px minimum node size while resizing
+  - Added centered placeholder labels and double-click textarea editing
+  - Updated labels live through the collaborative canvas state while typing
+  - Persisted final resized dimensions back into Liveblocks-backed node data
+  - Increased default dropped shape sizes to a more reasonable starting scale
 
 ## In Progress
 
@@ -70,7 +81,6 @@ change.
 ## Next Up
 
 - Implement canvas controls panel (delete, duplicate, select tools).
-- Add label editing for nodes.
 
 ## Open Questions
 
@@ -93,3 +103,4 @@ change.
 - `pnpm run build` passes after fixing all canvas visual issues and repositioning sidebars as fixed overlays with smooth animations.
 - `pnpm run build` passes after fixing drag/drop functionality and removing the MiniMap white box overlay.
 - `pnpm run build` passes after adding shape-specific rendering, drag previews, and editable node labels.
+- `pnpm.cmd run build` passes after adding node resizing, inline textarea label editing, persisted node dimensions, and larger default dropped shape sizes.
