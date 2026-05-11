@@ -7,6 +7,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 Read the following files in order before implementing or making any architectural decision:
 
+**Make sure to run `cd ghost-ai` if you are adding any libraries to the project**
+
 1. `context/project-overview.md`- product definition, goals, features and scope.
 2. `context/architecture.md`- system structure, boundaries , storage model and invariants
 3. `context/ui-context.md`- theme, colors, typography, canvas design and component conventions

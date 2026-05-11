@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Build canvas interactions: custom node rendering, edge handlers, and node creation flows.
+- Add shape-specific visual rendering and canvas controls.
 
 ## Completed
 
@@ -34,6 +34,12 @@ change.
   - Wired React Flow with `useLiveblocksFlow` for collaborative state sync
   - Integrated MiniMap, dot-pattern background, and fit-to-view functionality
   - Updated `EditorWorkspaceShell` to render the collaborative canvas
+- Implemented shape panel and node creation (as specified in 12-shape-panel.md)
+  - Added floating bottom-center shape toolbar with 6 draggable shape types
+  - Implemented drag/drop handlers with screen-to-canvas coordinate conversion
+  - Created custom CanvasNode renderer with handles for connections
+  - Generated deterministic node IDs using shape name, timestamp, and counter
+  - Integrated shape panel with canvas drop zone
 
 ## In Progress
 
@@ -41,9 +47,9 @@ change.
 
 ## Next Up
 
-- Add custom node and edge rendering for the canvas.
-- Implement node creation and edge connection flows.
-- Add canvas control panel (zoom, fit-to-view, select, delete).
+- Add shape-specific rendering (rectangles, circles, diamonds, pills, cylinders, hexagons).
+- Implement canvas controls panel (delete, duplicate, select tools).
+- Add label editing for nodes.
 
 ## Open Questions
 
@@ -62,3 +68,4 @@ change.
 - `pnpm run build` passes after adding share dialog flows and collaborator APIs with resilient Clerk enrichment fallback.
 - `pnpm run build` passes after adding the Liveblocks auth route, cached node client, and typed presence/user metadata.
 - `pnpm run build` passes after implementing the base canvas with Liveblocks-backed React Flow, MiniMap, and background patterns.
+- `pnpm run build` passes after implementing the shape panel with drag/drop node creation and custom node rendering.
