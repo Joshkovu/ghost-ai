@@ -17,6 +17,7 @@ import {
 import { useLiveblocksFlow } from '@liveblocks/react-flow';
 import '@xyflow/react/dist/style.css';
 import { CanvasNode } from '@/components/editor/canvas-node';
+import { CanvasNodeEditProvider } from '@/components/editor/canvas-node-edit-context';
 import { ShapePanel } from '@/components/editor/shape-panel';
 import { DEFAULT_NODE_COLOR, type CanvasFlowNode, type CanvasNodeData } from '@/types/canvas';
 
@@ -26,7 +27,7 @@ interface CanvasWrapperProps {
 }
 
 function CanvasDropZone() {
-  const { nodes, edges, onNodesChange, onEdgesChange } = useLiveblocksFlow<CanvasFlowNode>({
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useLiveblocksFlow<CanvasFlowNode>({
     suspense: true,
   });
   const shapeCountersRef = useRef<Record<string, number>>({});
@@ -94,23 +95,59 @@ function CanvasDropZone() {
     [generateNodeId, onNodesChange, screenToFlowPosition]
   );
 
+  const updateNodeLabel = useCallback(
+    (nodeId: string, nextLabel: string) => {
+      const currentNode = nodes.find((node) => node.id === nodeId);
+
+      if (!currentNode) {
+        return;
+      }
+
+      const changes: NodeChange<CanvasFlowNode>[] = [{
+        type: 'replace',
+        id: nodeId,
+        item: {
+          ...currentNode,
+          data: {
+            ...currentNode.data,
+            label: nextLabel,
+          },
+        } as CanvasFlowNode,
+      } as NodeChange<CanvasFlowNode>];
+
+      onNodesChange(changes);
+    },
+    [nodes, onNodesChange]
+  );
+
   return (
-    <div
-      className="absolute inset-0 bg-base"
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        nodeTypes={nodeTypes}
-        fitView
+    <CanvasNodeEditProvider updateNodeLabel={updateNodeLabel}>
+      <div
+        className="absolute inset-0 bg-base"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
-        <Background />
-      </ReactFlow>
-    </div>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          connectionLineStyle={{ stroke: 'var(--accent-primary)', strokeWidth: 2 }}
+          defaultEdgeOptions={{
+            animated: false,
+            style: {
+              stroke: 'var(--accent-primary)',
+              strokeWidth: 2,
+            },
+          }}
+          fitView
+        >
+          <Background />
+        </ReactFlow>
+      </div>
+    </CanvasNodeEditProvider>
   );
 }
 

@@ -55,6 +55,13 @@ change.
   - Fixed drag/drop coordinate calculation using React Flow's pane element positioning
   - Drop handler now properly intercepts shape drag events from ShapePanel
   - Nodes are correctly positioned on canvas when dropped
+- Implemented shape-specific node rendering and drag preview (as specified in 13-node-shape.md)
+  - Added reusable shape visual renderer for rectangle, pill, circle, diamond, hexagon, and cylinder
+  - Rendered rectangle, pill, and circle with CSS-based node styling
+  - Rendered diamond, hexagon, and cylinder with SVG-based node shapes that scale with node size
+  - Kept node borders subtle at rest and brighter when selected
+  - Added shape-specific drag ghost previews that match the dragged shape and size
+  - Enabled inline text editing for selected node labels through Liveblocks-backed node updates
 
 ## In Progress
 
@@ -62,7 +69,6 @@ change.
 
 ## Next Up
 
-- Add shape-specific rendering (rectangles, circles, diamonds, pills, cylinders, hexagons).
 - Implement canvas controls panel (delete, duplicate, select tools).
 - Add label editing for nodes.
 
@@ -86,3 +92,4 @@ change.
 - `pnpm run build` passes after implementing the shape panel with drag/drop node creation and custom node rendering.
 - `pnpm run build` passes after fixing all canvas visual issues and repositioning sidebars as fixed overlays with smooth animations.
 - `pnpm run build` passes after fixing drag/drop functionality and removing the MiniMap white box overlay.
+- `pnpm run build` passes after adding shape-specific rendering, drag previews, and editable node labels.

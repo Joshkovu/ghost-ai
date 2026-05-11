@@ -1,44 +1,36 @@
 'use client';
 
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, type NodeProps } from '@xyflow/react';
+
+import { CanvasShapeVisual } from '@/components/editor/canvas-shape';
+import { useCanvasNodeEdit } from '@/components/editor/canvas-node-edit-context';
 import type { CanvasNodeData } from '@/types/canvas';
 
 interface CanvasNodeProps {
+  id: string;
   data: CanvasNodeData;
   selected?: boolean;
 }
 
-export function CanvasNode({ data, selected }: CanvasNodeProps) {
+export function CanvasNode({ id, data, selected }: CanvasNodeProps & NodeProps) {
   const { label, color, shape, width, height } = data;
+  const { updateNodeLabel } = useCanvasNodeEdit();
 
-  const commonClasses = `
-    flex items-center justify-center
-    border-2 rounded
-    transition-all duration-150
-    ${selected ? 'ring-2 ring-offset-2' : ''}
-  `.trim();
-
-  const styleVars = {
-    '--border-color': color,
-    '--bg-color': `${color}15`,
-    '--ring-color': color,
-  } as React.CSSProperties & { '--border-color': string; '--bg-color': string; '--ring-color': string };
+  const currentLabel = label || shape;
 
   return (
-    <div
-      className={commonClasses}
-      style={{
-        width,
-        height,
-        borderColor: color,
-        backgroundColor: `${color}15`,
-        boxShadow: selected ? `0 0 0 2px ${color}40` : 'none',
-      }}
-    >
+    <div className="relative">
       <Handle type="target" position={Position.Top} />
-      <div className="text-center text-xs font-medium text-white pointer-events-none truncate px-2">
-        {label || shape}
-      </div>
+      <CanvasShapeVisual
+        shape={shape}
+        color={color}
+        width={width}
+        height={height}
+        selected={selected}
+        label={currentLabel}
+        editable={selected}
+        onLabelChange={(nextLabel) => updateNodeLabel(id, nextLabel)}
+      />
       <Handle type="source" position={Position.Bottom} />
     </div>
   );

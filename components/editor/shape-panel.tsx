@@ -3,6 +3,8 @@
 import { DEFAULT_SHAPE_SIZES, type NodeShape } from '@/types/canvas';
 import { Square, Circle, Diamond, Pill, Database, Grid3x3 } from 'lucide-react';
 
+import { createShapeDragPreview } from '@/components/editor/canvas-shape';
+
 const SHAPES: { name: NodeShape; icon: React.ReactNode; label: string }[] = [
   { name: 'rectangle', icon: <Square size={20} />, label: 'Rectangle' },
   { name: 'diamond', icon: <Diamond size={20} />, label: 'Diamond' },
@@ -15,6 +17,7 @@ const SHAPES: { name: NodeShape; icon: React.ReactNode; label: string }[] = [
 export function ShapePanel() {
   const handleDragStart = (e: React.DragEvent<HTMLButtonElement>, shape: NodeShape) => {
     const sizeData = DEFAULT_SHAPE_SIZES[shape];
+    const preview = createShapeDragPreview(shape, sizeData.width, sizeData.height, shape);
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData(
       'application/json',
@@ -26,15 +29,14 @@ export function ShapePanel() {
       })
     );
 
-    // Create a custom drag image
-    const dragImage = document.createElement('div');
-    dragImage.className = 'px-3 py-1 rounded-full bg-brand text-white text-sm font-medium';
-    dragImage.textContent = shape;
-    dragImage.style.position = 'absolute';
-    dragImage.style.left = '-1000px';
-    document.body.appendChild(dragImage);
-    e.dataTransfer.setDragImage(dragImage, 0, 0);
-    setTimeout(() => document.body.removeChild(dragImage), 0);
+    document.body.appendChild(preview);
+    e.dataTransfer.setDragImage(preview, sizeData.width / 2, sizeData.height / 2);
+
+    const cleanupPreview = () => {
+      preview.remove();
+    };
+
+    e.currentTarget.addEventListener('dragend', cleanupPreview, { once: true });
   };
 
   return (
