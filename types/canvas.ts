@@ -2,9 +2,11 @@
  * Shared canvas types for the collaborative editor
  */
 
+import type { Edge, Node } from '@xyflow/react';
+
 export type NodeShape = 'rectangle' | 'circle' | 'diamond' | 'pill' | 'cylinder' | 'hexagon';
 
-export interface CanvasNodeData {
+export interface CanvasNodeData extends Record<string, unknown> {
   label: string;
   color: string;
   shape: NodeShape;
@@ -26,6 +28,9 @@ export type CanvasEdge = {
   source: string;
   target: string;
 };
+
+export type CanvasFlowNode = Node<CanvasNodeData, 'canvas'>;
+export type CanvasFlowEdge = Edge;
 
 export const DEFAULT_SHAPE_SIZES: Record<NodeShape, { width: number; height: number }> = {
   rectangle: { width: 160, height: 100 },

@@ -9,17 +9,16 @@ import {
 import {
   ReactFlow,
   Background,
-  MiniMap,
-  useNodesState,
-  useEdgesState,
-  useReactFlow,
+  ReactFlowProvider,
   NodeTypes,
+  useReactFlow,
+  type NodeChange,
 } from '@xyflow/react';
 import { useLiveblocksFlow } from '@liveblocks/react-flow';
 import '@xyflow/react/dist/style.css';
 import { CanvasNode } from '@/components/editor/canvas-node';
 import { ShapePanel } from '@/components/editor/shape-panel';
-import { DEFAULT_NODE_COLOR, type CanvasNodeData } from '@/types/canvas';
+import { DEFAULT_NODE_COLOR, type CanvasFlowNode, type CanvasNodeData } from '@/types/canvas';
 
 interface CanvasWrapperProps {
   roomId: string;
@@ -27,55 +26,17 @@ interface CanvasWrapperProps {
 }
 
 function CanvasDropZone() {
-  const { nodes: liveblocksNodes, edges: liveblocksEdges } = useLiveblocksFlow();
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const { nodes, edges, onNodesChange, onEdgesChange } = useLiveblocksFlow<CanvasFlowNode>({
+    suspense: true,
+  });
   const shapeCountersRef = useRef<Record<string, number>>({});
-  
-  const [nodes, setNodes, onNodesChange] = useNodesState(liveblocksNodes || []);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(liveblocksEdges || []);
-
-  // Update local state when Liveblocks state changes
-  if (liveblocksNodes && JSON.stringify(nodes) !== JSON.stringify(liveblocksNodes)) {
-    setNodes(liveblocksNodes);
-  }
-  if (liveblocksEdges && JSON.stringify(edges) !== JSON.stringify(liveblocksEdges)) {
-    setEdges(liveblocksEdges);
-  }
+  const { screenToFlowPosition } = useReactFlow();
 
   const nodeTypes: NodeTypes = useMemo(() => {
     return {
       canvas: CanvasNode,
     };
   }, []);
-
-  return (
-    <div
-      ref={canvasRef}
-      className="w-full h-full"
-    >
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        nodeTypes={nodeTypes}
-        fitView
-      >
-        <CanvasDropHandler setNodes={setNodes} />
-        <Background />
-        <MiniMap />
-      </ReactFlow>
-    </div>
-  );
-}
-
-interface CanvasDropHandlerProps {
-  setNodes: (updater: (prevNodes: any[]) => any[]) => void;
-}
-
-function CanvasDropHandler({ setNodes }: CanvasDropHandlerProps) {
-  const { screenToFlowPosition } = useReactFlow();
-  const shapeCountersRef = useRef<Record<string, number>>({});
 
   const generateNodeId = useCallback((shape: string) => {
     if (!shapeCountersRef.current[shape]) {
@@ -93,65 +54,72 @@ function CanvasDropHandler({ setNodes }: CanvasDropHandlerProps) {
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
-      e.stopPropagation();
 
       try {
         const data = JSON.parse(e.dataTransfer.getData('application/json'));
-        
-        if (data.type === 'shape') {
-          // Convert screen coordinates to flow coordinates
-          const position = screenToFlowPosition({
-            x: e.clientX,
-            y: e.clientY,
-          });
 
-          // Offset to center the node on the drop point
-          const offsetX = position.x - data.width / 2;
-          const offsetY = position.y - data.height / 2;
-
-          const nodeData: CanvasNodeData = {
-            label: '',
-            color: DEFAULT_NODE_COLOR,
-            shape: data.shape,
-            width: data.width,
-            height: data.height,
-          };
-
-          const newNode = {
-            id: generateNodeId(data.shape),
-            data: nodeData,
-            position: {
-              x: offsetX,
-              y: offsetY,
-            },
-            type: 'canvas',
-          };
-
-          setNodes((prevNodes) => [...prevNodes, newNode]);
+        if (data.type !== 'shape') {
+          return;
         }
+
+        const flowPosition = screenToFlowPosition({
+          x: e.clientX,
+          y: e.clientY,
+        });
+
+        const nodeData: CanvasNodeData = {
+          label: '',
+          color: DEFAULT_NODE_COLOR,
+          shape: data.shape,
+          width: data.width,
+          height: data.height,
+        };
+
+        const newNode = {
+          id: generateNodeId(data.shape),
+          data: nodeData,
+          position: {
+            x: flowPosition.x - data.width / 2,
+            y: flowPosition.y - data.height / 2,
+          },
+          type: 'canvas',
+        };
+
+        const changes: NodeChange<CanvasFlowNode>[] = [{ type: 'add', item: newNode as CanvasFlowNode }];
+        onNodesChange(changes);
       } catch (err) {
         console.error('Failed to parse drag data:', err);
       }
     },
-    [screenToFlowPosition, generateNodeId, setNodes]
+    [generateNodeId, onNodesChange, screenToFlowPosition]
   );
 
   return (
     <div
+      className="absolute inset-0 bg-base"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="absolute inset-0"
-      style={{ pointerEvents: 'auto' }}
-    />
+    >
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
+        fitView
+      >
+        <Background />
+      </ReactFlow>
+    </div>
   );
 }
 
 function CanvasContent() {
   return (
-    <>
+    <ReactFlowProvider>
       <CanvasDropZone />
       <ShapePanel />
-    </>
+    </ReactFlowProvider>
   );
 }
 

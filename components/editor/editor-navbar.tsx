@@ -53,7 +53,7 @@ export function EditorNavbar({
             <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-copy-faint">
               Workspace
             </p>
-            <h1 className="mt-1 truncate text-sm font-semibold text-copy-primary md:text-base">
+            <h1 className="mt-1 truncate text-sm font-semibold text-white md:text-base lg:text-white">
               {projectName}
             </h1>
           </div>

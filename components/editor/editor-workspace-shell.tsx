@@ -44,22 +44,6 @@ export function EditorWorkspaceShell({
     submitActiveDialog,
   } = useProjectDialogs();
 
-  // Build dynamic grid columns based on sidebar visibility
-  const getGridColsClass = () => {
-    if (isSidebarOpen && isAiSidebarOpen) {
-      return "grid-cols-[20rem_minmax(0,1fr)_20rem]";
-    }
-    if (isSidebarOpen && !isAiSidebarOpen) {
-      return "grid-cols-[20rem_minmax(0,1fr)]";
-    }
-    if (!isSidebarOpen && isAiSidebarOpen) {
-      return "grid-cols-[minmax(0,1fr)_20rem]";
-    }
-    return "grid-cols-1";
-  };
-
-  const gridColsClass = cn("grid min-h-0 flex-1 overflow-hidden", getGridColsClass());
-
   return (
     <div className="flex min-h-screen flex-col bg-base text-copy-primary">
       <EditorNavbar
@@ -70,59 +54,64 @@ export function EditorWorkspaceShell({
         onToggleAiSidebar={() => setIsAiSidebarOpen((currentValue) => !currentValue)}
       />
 
-      <div className={gridColsClass}>
-        {isSidebarOpen && (
-          <div className="min-h-0">
-            <ProjectSidebar
-              isOpen={true}
-              variant="docked"
-              onClose={() => setIsSidebarOpen(false)}
-              myProjects={ownedProjects}
-              sharedProjects={sharedProjects}
-              activeProjectId={projectId}
-              onOpenDialog={openDialog}
-            />
-          </div>
-        )}
+      <main className="relative min-h-0 flex-1 overflow-hidden">
+        {/* Canvas fills the entire available space */}
+        <CanvasWrapper roomId={projectId} />
 
-        <main className="min-h-0 overflow-hidden p-3 md:p-4">
-          <div className="relative flex min-h-[calc(100vh-7.5rem)] rounded-[28px] border border-surface-border overflow-hidden shadow-[0_24px_120px_rgba(0,0,0,0.38)]">
-            <CanvasWrapper roomId={projectId} />
-          </div>
-        </main>
+        {/* Left Sidebar - Fixed overlay */}
+        <div
+          className={cn(
+            "fixed left-0 top-[3.5rem] bottom-0 w-80 z-30 transition-transform duration-300 ease-in-out overflow-hidden",
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <ProjectSidebar
+            isOpen={isSidebarOpen}
+            variant="docked"
+            onClose={() => setIsSidebarOpen(false)}
+            myProjects={ownedProjects}
+            sharedProjects={sharedProjects}
+            activeProjectId={projectId}
+            onOpenDialog={openDialog}
+          />
+        </div>
 
-        {isAiSidebarOpen && (
-          <aside className="min-h-0">
-            <div className="flex h-full flex-col border-l border-surface-border bg-surface/88 p-4 backdrop-blur-sm">
-              <div className="flex h-full flex-col rounded-[28px] border border-surface-border bg-base/65 p-4 text-center shadow-[0_18px_70px_rgba(0,0,0,0.2)]">
-                <div className="flex items-center justify-between border-b border-surface-border px-2 pb-4 text-left">
-                  <div>
-                    <p className="text-sm font-semibold text-copy-primary">AI Copilot</p>
-                    <p className="text-xs text-copy-faint">Placeholder panel</p>
-                  </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-brand/30 bg-[linear-gradient(180deg,rgba(0,200,212,0.22),rgba(0,200,212,0.1))] text-brand shadow-[0_0_24px_rgba(0,200,212,0.18)]">
-                    ✦
-                  </div>
+        {/* Right Sidebar - Fixed overlay */}
+        <div
+          className={cn(
+            "fixed right-0 top-[3.5rem] bottom-0 w-80 z-30 transition-transform duration-300 ease-in-out overflow-hidden",
+            isAiSidebarOpen ? "translate-x-0" : "translate-x-full"
+          )}
+        >
+          <div className="flex h-full flex-col border-l border-surface-border bg-surface/88 backdrop-blur-sm">
+            <div className="flex h-full flex-col rounded-none border-none bg-base/65 p-4 text-center">
+              <div className="flex items-center justify-between border-b border-surface-border px-2 pb-4 text-left">
+                <div>
+                  <p className="text-sm font-semibold text-copy-primary">AI Copilot</p>
+                  <p className="text-xs text-copy-faint">Placeholder panel</p>
                 </div>
-
-                <div className="mt-4 rounded-2xl border border-surface-border bg-elevated p-4 text-left shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
-                  <p className="text-sm font-semibold text-copy-primary">Chat surface pending</p>
-                  <p className="mt-1 text-sm leading-6 text-copy-secondary">
-                    The toggle is wired. Messaging and generation are intentionally out of scope here.
-                  </p>
-                </div>
-
-                <div className="mt-auto rounded-2xl border border-dashed border-surface-border bg-base/50 p-4 text-left">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-copy-faint">Future hooks</p>
-                  <p className="mt-2 text-sm leading-6 text-copy-secondary">
-                    Prompt composer, run status, and architecture guidance will attach to this sidebar.
-                  </p>
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-brand/30 bg-[linear-gradient(180deg,rgba(0,200,212,0.22),rgba(0,200,212,0.1))] text-brand shadow-[0_0_24px_rgba(0,200,212,0.18)]">
+                  ✦
                 </div>
               </div>
+
+              <div className="mt-4 rounded-2xl border border-surface-border bg-elevated p-4 text-left shadow-[0_12px_40px_rgba(0,0,0,0.18)]">
+                <p className="text-sm font-semibold text-copy-primary">Chat surface pending</p>
+                <p className="mt-1 text-sm leading-6 text-copy-secondary">
+                  The toggle is wired. Messaging and generation are intentionally out of scope here.
+                </p>
+              </div>
+
+              <div className="mt-auto rounded-2xl border border-dashed border-surface-border bg-base/50 p-4 text-left">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-copy-faint">Future hooks</p>
+                <p className="mt-2 text-sm leading-6 text-copy-secondary">
+                  Prompt composer, run status, and architecture guidance will attach to this sidebar.
+                </p>
+              </div>
             </div>
-          </aside>
-        )}
-      </div>
+          </div>
+        </div>
+      </main>
 
       <ProjectDialogs
         activeDialog={activeDialog}

@@ -40,6 +40,21 @@ change.
   - Created custom CanvasNode renderer with handles for connections
   - Generated deterministic node IDs using shape name, timestamp, and counter
   - Integrated shape panel with canvas drop zone
+- Fixed canvas visual issues and layout (as specified in current-issues.md)
+  - Removed floating card styling (rounded borders, box shadows) from canvas
+  - Converted canvas to full-bleed, infinite design canvas aesthetic
+  - Repositioned sidebars from grid layout to fixed overlays with proper z-index
+  - Implemented smooth sidebar slide animations using transform: translateX
+  - Fixed left sidebar to fully hide off-screen when toggled
+  - Fixed right sidebar to slide in/out from the right edge
+  - Canvas background now extends edge-to-edge under both sidebars
+  - Removed padding/margins from canvas wrapper for seamless edge-to-edge experience
+- Fixed drag and drop and removed MiniMap white box
+  - Removed MiniMap component (white box on lower right corner)
+  - Refactored drop handler to be a child of ReactFlow for proper context
+  - Fixed drag/drop coordinate calculation using React Flow's pane element positioning
+  - Drop handler now properly intercepts shape drag events from ShapePanel
+  - Nodes are correctly positioned on canvas when dropped
 
 ## In Progress
 
@@ -69,3 +84,5 @@ change.
 - `pnpm run build` passes after adding the Liveblocks auth route, cached node client, and typed presence/user metadata.
 - `pnpm run build` passes after implementing the base canvas with Liveblocks-backed React Flow, MiniMap, and background patterns.
 - `pnpm run build` passes after implementing the shape panel with drag/drop node creation and custom node rendering.
+- `pnpm run build` passes after fixing all canvas visual issues and repositioning sidebars as fixed overlays with smooth animations.
+- `pnpm run build` passes after fixing drag/drop functionality and removing the MiniMap white box overlay.
