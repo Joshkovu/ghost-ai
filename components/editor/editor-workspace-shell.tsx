@@ -6,6 +6,7 @@ import { EditorNavbar } from "@/components/editor/editor-navbar";
 import { ProjectDialogs } from "@/components/editor/project-dialogs";
 import { ProjectSidebar } from "@/components/editor/project-sidebar";
 import { ShareProjectDialog } from "@/components/editor/share-project-dialog";
+import { CanvasWrapper } from "@/components/editor/canvas-wrapper";
 import { useProjectDialogs } from "@/lib/hooks/use-project-dialogs";
 import type { ProjectListItem } from "@/lib/project-types";
 import { cn } from "@/lib/utils";
@@ -67,23 +68,9 @@ export function EditorWorkspaceShell({
         </div>
 
         <main className="min-h-0 overflow-hidden p-3 md:p-4">
-          <section className="relative flex min-h-[calc(100vh-7.5rem)] items-center justify-center overflow-hidden rounded-[28px] border border-surface-border bg-[radial-gradient(circle_at_top,_rgba(0,200,212,0.1),_transparent_36%),radial-gradient(circle_at_bottom_right,_rgba(100,87,249,0.12),transparent_28%),linear-gradient(180deg,rgba(14,14,18,0.98),rgba(7,7,10,0.98))] px-6 text-center shadow-[0_24px_120px_rgba(0,0,0,0.38)] before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] before:bg-[size:72px_72px] before:opacity-35">
-            <div className="relative z-10 max-w-xl space-y-5">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-surface-border bg-base/85 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[linear-gradient(180deg,rgba(0,200,212,0.22),rgba(0,200,212,0.08))] text-brand">
-                  <span className="text-2xl leading-none">◌</span>
-                </div>
-              </div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-copy-faint">Workspace shell</p>
-              <h2 className="text-3xl font-semibold tracking-tight text-copy-primary md:text-[2.15rem]">
-                Canvas and collaboration tooling land here next.
-              </h2>
-              <p className="mx-auto max-w-lg text-sm leading-6 text-copy-secondary md:text-base">
-                This room is ready for the shared architecture canvas, durable AI workflows, and real-time presence.
-                For now, the shell is wired with project context and navigation only.
-              </p>
-            </div>
-          </section>
+          <div className="relative flex min-h-[calc(100vh-7.5rem)] rounded-[28px] border border-surface-border overflow-hidden shadow-[0_24px_120px_rgba(0,0,0,0.38)]">
+            <CanvasWrapper roomId={projectId} />
+          </div>
         </main>
 
         <aside className={cn("hidden min-h-0 md:block", isAiSidebarOpen ? "md:block" : "md:hidden") }>

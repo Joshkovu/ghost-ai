@@ -9,7 +9,7 @@ change.
 
 ## Current Goal
 
-- Build the editor workspace shell with server-side access checks.
+- Build canvas interactions: custom node rendering, edge handlers, and node creation flows.
 
 ## Completed
 
@@ -27,6 +27,13 @@ change.
 - Built `/editor/[roomId]` with server-side access checks, access denial state, and workspace shell placeholders.
 - Implemented workspace Share dialog with collaborator list, owner invite/remove controls, and copy-link feedback.
 - Added `/api/projects/[id]/collaborators` API with owner-enforced invite/remove and Clerk-based collaborator enrichment.
+- Configured Liveblocks presence/user metadata, a cached node client, deterministic cursor colors, and the project-scoped auth route.
+- Implemented base canvas with Liveblocks-backed React Flow (as specified in 11-base-canvas.md)
+  - Created `types/canvas.ts` with shared canvas node and edge types
+  - Built client-side `CanvasWrapper` component with Liveblocks room setup
+  - Wired React Flow with `useLiveblocksFlow` for collaborative state sync
+  - Integrated MiniMap, dot-pattern background, and fit-to-view functionality
+  - Updated `EditorWorkspaceShell` to render the collaborative canvas
 
 ## In Progress
 
@@ -34,7 +41,9 @@ change.
 
 ## Next Up
 
-- Connect the editor canvas and workspace interactions to real runtime data.
+- Add custom node and edge rendering for the canvas.
+- Implement node creation and edge connection flows.
+- Add canvas control panel (zoom, fit-to-view, select, delete).
 
 ## Open Questions
 
@@ -42,8 +51,7 @@ change.
 
 ## Architecture Decisions
 
-- [Decisions made that affect the system design or
-  data model — include why the decision was made]
+- Liveblocks rooms are keyed by project IDs and created on demand in `/api/liveblocks-auth` after Clerk auth and project access checks.
 
 ## Session Notes
 
@@ -52,3 +60,5 @@ change.
 - `pnpm run build` passes after adding `/editor/[roomId]`, access helpers, and workspace shell placeholders.
 - `pnpm run build` passes after refining the workspace alignment and replacing the AI sidebar icon with a bright `AI chat` button.
 - `pnpm run build` passes after adding share dialog flows and collaborator APIs with resilient Clerk enrichment fallback.
+- `pnpm run build` passes after adding the Liveblocks auth route, cached node client, and typed presence/user metadata.
+- `pnpm run build` passes after implementing the base canvas with Liveblocks-backed React Flow, MiniMap, and background patterns.
