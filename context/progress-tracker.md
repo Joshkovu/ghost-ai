@@ -73,6 +73,12 @@ change.
   - Updated labels live through the collaborative canvas state while typing
   - Persisted final resized dimensions back into Liveblocks-backed node data
   - Increased default dropped shape sizes to a more reasonable starting scale
+- Implemented selected-node color toolbar (as specified in 15-nodes-color-tool.md)
+  - Added the predefined node fill/text color pairs to shared canvas constants
+  - Added a floating swatch toolbar above selected nodes
+  - Highlighted the active swatch and added tight hover glow per text color
+  - Updated both node background and paired text color through collaborative canvas state
+  - Kept toolbar interactions from dragging nodes or panning the canvas
 
 ## In Progress
 
@@ -104,3 +110,4 @@ change.
 - `pnpm run build` passes after fixing drag/drop functionality and removing the MiniMap white box overlay.
 - `pnpm run build` passes after adding shape-specific rendering, drag previews, and editable node labels.
 - `pnpm.cmd run build` passes after adding node resizing, inline textarea label editing, persisted node dimensions, and larger default dropped shape sizes.
+- `pnpm.cmd run build` passes after adding the selected-node color toolbar and predefined node color pairs.
